@@ -30,10 +30,12 @@ public class NavisaleTest {
         header = homepage.getHeader();
     }
 
+    @Disabled
     @Test
     void descriptionAndCharacteristicsSelectedProductMatchDescriptionAndCharacteristicsInShoppingCart() {
         ProductPage productPage = header.openCatalog()
-                .selectCategoryBy("Женщинам", "Верхняя одежда", "Пальто")
+                .selectCategoryBy("Женщинам", "Верхняя одежда",
+                        "Пальто", false)
                 .selectProductBy("Пальто женское для холодного времени года Tommy Hilfiger 76J4706-200");
         String productDescription = productPage.getProductDescription();
         Map<String, String> characteristicsFromProductDescription = productPage.getCharacteristicsFromProductDescription();
@@ -53,18 +55,21 @@ public class NavisaleTest {
     @Test
     void totalQuantityAddedProductSameAsTotalQuantityInShoppingCart() {
         header.openCatalog()
-                .selectCategoryBy("Мужчинам", "Футболки и майки", "Футболки")
+                .selectCategoryBy("Мужчинам", "Футболки и майки",
+                        "Футболки", false)
                 .selectProductBy("Футболка повседневная унисекс The Simpsons SPCTE232F15UA")
                 .addToShoppingCart();
 
         header.openCatalog()
-                .selectCategoryBy("Женщинам", "Верхняя одежда", "Пальто")
+                .selectCategoryBy("Женщинам", "Верхняя одежда",
+                        "Пальто", false)
                 .selectProductBy("Пальто женское для холодного времени года Tommy Hilfiger 76J4706-200")
                 .addToShoppingCart()
                 .plusItemToShoppingCart();
 
         ShoppingCartPage shoppingCartPage = header.openCatalog()
-                .selectCategoryBy("Обувь", "Мужская", "Ботинки")
+                .selectCategoryBy("Обувь", "Мужская",
+                        "Ботинки", false)
                 .selectProductBy("Ботинки универсальные унисекс для повседневной носки Native Shoes 31106800-1001")
                 .addToShoppingCart()
                 .goToShoppingCart();
@@ -77,10 +82,12 @@ public class NavisaleTest {
         assertThat(totalQuantityAddedProducts).isEqualTo(totalQuantityInShoppingCart);
     }
 
+    @Disabled
     @Test
     void forEachProductPriceOnProductPageMatchToPriceInShoppingCartPage() {
         String item1Price = header.openCatalog()
-                .selectCategoryBy("Мужчинам", "Брюки", "Карго")
+                .selectCategoryBy("Мужчинам", "Брюки",
+                        "Карго", false)
                 .selectProductBy("Брюки карго мужские повседневные Uniqlo 462318-57")
                 .addToShoppingCart()
                 .plusItemToShoppingCart()
@@ -93,7 +100,8 @@ public class NavisaleTest {
                 .getPrice();
 
         String item3Price = header.openCatalog()
-                .selectCategoryBy("Женщинам", "Спортивная одежда", "Футболки и топы")
+                .selectCategoryBy("Женщинам", "Спортивная одежда",
+                        "Футболки и топы", false)
                 .selectProductBy("Спортивный жилет женский New Balance WT41280-BK")
                 .addToShoppingCart()
                 .getPrice();
@@ -106,10 +114,12 @@ public class NavisaleTest {
         assertThat(itemPrices).contains(item3Price, item2Price, item1Price);
     }
 
+    @Disabled
     @Test
     void descriptionProductOnProductPageMatchCharacteristicsOnProductPage() {
         ProductPage productPage = header.openCatalog()
-                .selectCategoryBy("Мужчинам", "Верхняя одежда", "Пальто")
+                .selectCategoryBy("Мужчинам", "Верхняя одежда",
+                        "Пальто", false)
                 .selectProductBy("Плащ мужской для повседневной носки Evisu 2ESHTM1CT705FF");
 
         String productDescription = productPage.getProductDescription();

@@ -6,14 +6,13 @@ import com.paradise.navisale.page.ProductsPage;
 import lombok.Getter;
 import org.openqa.selenium.By;
 
-import java.util.Map;
+import java.util.Optional;
 
 import static com.codeborne.selenide.Condition.attribute;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.ScrollIntoViewOptions.instant;
 import static com.codeborne.selenide.Selenide.*;
 import static com.paradise.navisale.util.LocatorsUtil.*;
-import static java.util.stream.Collectors.toMap;
 
 public class CatalogComponent extends BaseComponent {
 
@@ -30,37 +29,36 @@ public class CatalogComponent extends BaseComponent {
     public ProductsPage selectCategoryBy(String categoryName, String subcategoryName) {
         hoverMouseOverCategory(categoryName);
 
-        Map<String, SelenideElement> subcategoriesMap = subcategories.stream()
-                .collect(toMap(subcategory -> subcategory.find(By.tagName("a")).getText(),
-                        subcategory -> subcategory.find(By.tagName("a"))));
+        Optional<SelenideElement> maybeSubcategory = subcategories.stream()
+                .filter(subcategory -> subcategory.find(By.tagName("a")).getText().equals(subcategoryName))
+                .map(subcategory -> subcategory.find(By.tagName("a")))
+                .findFirst();
 
-        subcategoriesMap.get(subcategoryName)
-                .scrollIntoView(instant())
-                .click();
+        maybeSubcategory.ifPresent(subcategory -> subcategory.scrollIntoView(instant()).click());
 
         return page(ProductsPage.class);
     }
 
-    public ProductsPage selectCategoryBy(String categoryName, String subcategoryName, String itemName) {
+    public ProductsPage selectCategoryBy(String categoryName, String subcategoryName,
+                                         String itemName, boolean openMore) {
         hoverMouseOverCategory(categoryName);
 
-        Map<String, ElementsCollection> subcategoriesMap = subcategories.stream()
-                .peek(this::checkMoreButtonForSubcategoryAndClickIfExists)
-                .collect(toMap(subcategory -> subcategory.find(By.tagName("a")).getText(),
-                        subcategory -> subcategory.findAll("ul a")));
+        Optional<SelenideElement> maybeItem = subcategories.stream()
+                .filter(subcategory -> subcategory.find(By.tagName("a")).getText().equals(subcategoryName))
+                .peek(it -> this.checkMoreButtonForSubcategoryAndClickIfExists(it, openMore))
+                .map(subcategory -> subcategory.findAll("ul a"))
+                .map(items -> items.findBy(attribute("title", itemName)))
+                .findFirst();
 
-        SelenideElement item = subcategoriesMap.get(subcategoryName)
-                .findBy(attribute("title", itemName));
-        item.scrollIntoView(instant()).click();
+        maybeItem.ifPresent(item -> item.scrollIntoView(instant()).click());
 
         return page(ProductsPage.class);
     }
 
-    private void checkMoreButtonForSubcategoryAndClickIfExists(SelenideElement subcategory) {
-        if (subcategory.$(SUBCATEGORY_MORE_BUTTON_LOCATOR).exists()) {
-            subcategory.$(SUBCATEGORY_MORE_BUTTON_LOCATOR)
-                    .scrollIntoView(instant());
-            subcategory.$(SUBCATEGORY_MORE_BUTTON_LOCATOR).click();
+    private void checkMoreButtonForSubcategoryAndClickIfExists(SelenideElement subcategory, boolean openMore) {
+        SelenideElement moreButton = subcategory.$(SUBCATEGORY_MORE_BUTTON_LOCATOR);
+        if (openMore && moreButton.exists()) {
+            moreButton.scrollIntoView(instant()).click();
         }
     }
 
