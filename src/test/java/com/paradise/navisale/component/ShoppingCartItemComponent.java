@@ -1,6 +1,7 @@
 package com.paradise.navisale.component;
 
 import com.codeborne.selenide.SelenideElement;
+import lombok.EqualsAndHashCode;
 import org.openqa.selenium.By;
 
 import java.util.Arrays;
@@ -12,6 +13,7 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.paradise.navisale.util.LocatorsUtil.*;
 import static java.util.stream.Collectors.toMap;
 
+@EqualsAndHashCode(callSuper = false)
 public class ShoppingCartItemComponent extends BaseComponent {
 
     public ShoppingCartItemComponent(SelenideElement root) {

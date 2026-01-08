@@ -18,16 +18,6 @@ import static java.util.stream.Collectors.toMap;
 
 public class ProductPage extends BasePage {
 
-    public ProductPage openCharacteristics() {
-        $(CHARACTERISTICS_BUTTON_LOCATOR).scrollIntoView(instant()).click();
-        return this;
-    }
-
-    public ProductPage uncoverCharacteristics() {
-        $(By.xpath(UNCOVER_BUTTON_LOCATOR)).click();
-        return this;
-    }
-
     public String getProductDescription() {
         return $(PRODUCT_DESCRIPTION_LOCATOR).getText();
     }
@@ -44,12 +34,6 @@ public class ProductPage extends BasePage {
         return characteristics;
     }
 
-    public Map<String, String> getCharacteristics() {
-        return $$(CHARACTERISTICS_LIST_LOCATOR).stream()
-                .collect(toMap(characteristic -> characteristic.find(By.tagName("span")).getText(),
-                        characteristic -> characteristic.find(By.tagName("dd")).getText()));
-    }
-
     public Map<String, String> getColorSizeOptions() {
         return $$(COLOR_SIZE_OPTIONS_LIST_LOCATOR).stream()
                 .peek(selenideElement -> selenideElement.scrollIntoView(instant()))
@@ -62,27 +46,11 @@ public class ProductPage extends BasePage {
         return this;
     }
 
-    public ProductPage plusItemToShoppingCart() {
-        SelenideElement plusItem = $(By.xpath(PLUS_ITEM_SPAN_LOCATOR));
+    public ProductPage changeItemQuantity(ItemQuantityOption itemQuantityOption) {
+        SelenideElement quantityOption = itemQuantityOption.getItemQuantityOption();
 
-        plusItem.shouldBe(Condition.interactable);
-        actions().moveToElement(plusItem).click().perform();
-        return this;
-    }
-
-    public ProductPage minusItemFromShoppingCart() {
-        SelenideElement minusItem = $(By.xpath(MINUS_ITEM_SPAN_LOCATOR));
-
-        minusItem.shouldBe(Condition.interactable);
-        actions().moveToElement(minusItem).click().perform();
-        return this;
-    }
-
-    public ProductPage deleteItemFromShoppingCart() {
-        SelenideElement deleteItem = $(By.xpath(DELETE_ITEM_SPAN_LOCATOR));
-
-        deleteItem.shouldBe(Condition.interactable);
-        actions().moveToElement(deleteItem).click().perform();
+        quantityOption.shouldBe(Condition.interactable);
+        actions().moveToElement(quantityOption).click().perform();
         return this;
     }
 
@@ -98,5 +66,21 @@ public class ProductPage extends BasePage {
         return $$(PRODUCT_PRICE_LOCATOR).stream()
                 .map(SelenideElement::getText)
                 .collect(Collectors.joining(" "));
+    }
+
+    public ProductPage openCharacteristics() {
+        $(CHARACTERISTICS_BUTTON_LOCATOR).scrollIntoView(instant()).click();
+        return this;
+    }
+
+    public ProductPage uncoverCharacteristics() {
+        $(By.xpath(UNCOVER_BUTTON_LOCATOR)).click();
+        return this;
+    }
+
+    public Map<String, String> getCharacteristics() {
+        return $$(CHARACTERISTICS_LIST_LOCATOR).stream()
+                .collect(toMap(characteristic -> characteristic.find(By.tagName("span")).getText(),
+                        characteristic -> characteristic.find(By.tagName("dd")).getText()));
     }
 }

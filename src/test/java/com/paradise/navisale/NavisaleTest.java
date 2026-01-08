@@ -4,6 +4,7 @@ import com.codeborne.selenide.Selenide;
 import com.paradise.navisale.component.HeaderComponent;
 import com.paradise.navisale.component.ShoppingCartItemComponent;
 import com.paradise.navisale.page.HomePage;
+import com.paradise.navisale.page.ItemQuantityOption;
 import com.paradise.navisale.page.ProductPage;
 import com.paradise.navisale.page.ShoppingCartPage;
 import org.hamcrest.MatcherAssert;
@@ -51,7 +52,6 @@ public class NavisaleTest {
         );
     }
 
-    @Disabled
     @Test
     void totalQuantityAddedProductSameAsTotalQuantityInShoppingCart() {
         header.openCatalog()
@@ -65,7 +65,7 @@ public class NavisaleTest {
                         "Пальто", false)
                 .selectProductBy("Пальто женское для холодного времени года Tommy Hilfiger 76J4706-200")
                 .addToShoppingCart()
-                .plusItemToShoppingCart();
+                .changeItemQuantity(ItemQuantityOption.PLUS);
 
         ShoppingCartPage shoppingCartPage = header.openCatalog()
                 .selectCategoryBy("Обувь", "Мужская",
@@ -82,7 +82,6 @@ public class NavisaleTest {
         assertThat(totalQuantityAddedProducts).isEqualTo(totalQuantityInShoppingCart);
     }
 
-    @Disabled
     @Test
     void forEachProductPriceOnProductPageMatchToPriceInShoppingCartPage() {
         String item1Price = header.openCatalog()
@@ -90,7 +89,7 @@ public class NavisaleTest {
                         "Карго", false)
                 .selectProductBy("Брюки карго мужские повседневные Uniqlo 462318-57")
                 .addToShoppingCart()
-                .plusItemToShoppingCart()
+                .changeItemQuantity(ItemQuantityOption.PLUS)
                 .getPrice();
 
         String item2Price = header.openCatalog()
@@ -114,7 +113,6 @@ public class NavisaleTest {
         assertThat(itemPrices).contains(item3Price, item2Price, item1Price);
     }
 
-    @Disabled
     @Test
     void descriptionProductOnProductPageMatchCharacteristicsOnProductPage() {
         ProductPage productPage = header.openCatalog()
