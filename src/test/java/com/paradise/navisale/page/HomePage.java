@@ -7,7 +7,7 @@ import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 public class HomePage extends BasePage {
 
     public HomePage open() {
-        Selenide.open("https://navisale.ru");
+        Selenide.open("https://navisale.ru", HomePage.class);
         getWebDriver().manage().window().maximize();
         return this;
     }

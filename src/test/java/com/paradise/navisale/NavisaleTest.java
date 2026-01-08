@@ -30,7 +30,6 @@ public class NavisaleTest {
         header = homepage.getHeader();
     }
 
-    @Disabled
     @Test
     void descriptionAndCharacteristicsSelectedProductMatchDescriptionAndCharacteristicsInShoppingCart() {
         ProductPage productPage = header.openCatalog()
@@ -52,6 +51,7 @@ public class NavisaleTest {
         );
     }
 
+    @Disabled
     @Test
     void totalQuantityAddedProductSameAsTotalQuantityInShoppingCart() {
         header.openCatalog()
